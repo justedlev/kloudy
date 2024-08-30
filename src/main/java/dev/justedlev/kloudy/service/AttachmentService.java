@@ -1,15 +1,15 @@
 package dev.justedlev.kloudy.service;
 
-import dev.justedlev.kloudy.model.AttachmentInfoResponse;
+import dev.justedlev.kloudy.model.KloudyFileResponse;
 import dev.justedlev.kloudy.model.AttachmentResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
 public interface AttachmentService {
-    AttachmentInfoResponse upload(MultipartFile file);
+    KloudyFileResponse upload(MultipartFile file);
 
-    AttachmentInfoResponse delete(UUID id);
+    void delete(UUID id);
 
     AttachmentResponse download(UUID id);
 }

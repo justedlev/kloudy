@@ -11,17 +11,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(jsr250Enabled = true)
+@EnableMethodSecurity(jsr250Enabled = true, securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final SecurityProperties properties;
-    private final KeycloakJwtAuthenticationConverter keycloakJwtAuthenticationConverter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(@NonNull HttpSecurity httpSecurity) throws Exception {
@@ -30,7 +31,7 @@ public class SecurityConfiguration {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(serverSpec -> serverSpec
                         .jwt(jwtConfigurer -> jwtConfigurer
-                                .jwtAuthenticationConverter(keycloakJwtAuthenticationConverter)
+                                .jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter())
                         )
                 )
                 .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
@@ -38,11 +39,8 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
                         .requestMatchers(properties.getWhiteList().toArray(String[]::new)).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/history/accounts/**").hasRole("admin")
-                        .requestMatchers(HttpMethod.GET, "/v1/accounts/{}/**").hasAnyAuthority("ROLE_user", "ROLE_admin", "SCOPE_account:read")
-                        .requestMatchers(HttpMethod.PATCH, "/v1/accounts/{}/**").hasAnyRole("user", "admin")
-                        .requestMatchers(HttpMethod.PUT, "/v1/accounts/{}/**").hasAnyRole("user", "admin")
-                        .requestMatchers(HttpMethod.DELETE, "/v1/accounts/{}/**").hasAnyRole("user", "admin")
+                        .requestMatchers(HttpMethod.GET, "/v1/files/**").hasAnyAuthority("SCOPE_kloudy.files:read", "ROLE_user")
+                        .requestMatchers(HttpMethod.POST, "/v1/files/**").hasAnyAuthority("SCOPE_kloudy.files:write", "ROLE_user")
                         .anyRequest().authenticated()
                 )
                 .build();
@@ -50,6 +48,6 @@ public class SecurityConfiguration {
 
     @Bean
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new NullAuthenticatedSessionStrategy();
+        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
     }
 }

@@ -20,7 +20,5 @@ public class KeycloakProperties {
     private String realm;
     @NestedConfigurationProperty
     private KeycloakClientProperties client;
-    @NestedConfigurationProperty
-    private KeycloakJwtConverterProperties jwtConverter;
     private List<String> userGroups;
 }

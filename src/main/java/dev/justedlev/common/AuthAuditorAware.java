@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class AuthAuditorAware implements AuditorAware<String> {
     @NonNull
@@ -17,7 +18,7 @@ public class AuthAuditorAware implements AuditorAware<String> {
         return Optional.of(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
-                .filter(authentication -> !(authentication instanceof AnonymousAuthenticationToken))
+                .filter(Predicate.not(AnonymousAuthenticationToken.class::isInstance))
                 .map(Authentication::getPrincipal)
                 .map(Jwt.class::cast)
                 .map(Jwt::getSubject);
