@@ -1,5 +1,8 @@
+-Xmx2G
+-Xms125M
 -Duser.timezone=UTC
 -Dspring.devtools.add-properties=true
 -Dlogging.level.web=trace
 -Dlogging.level.sql=trace
 -Dlogging.level.org.springframework.security=trace
+-Dlogging.level.org.hibernate.type=debug

@@ -5,50 +5,53 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.justedlev.microservice</groupId>
     <artifactId>kloudy</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>kloudy</name>
-    <description>File storage</description>
+    <description>☁️ Kloudy :: Simple file storage</description>
+    <developers>
+        <developer>
+            <id>justedlev</id>
+            <name>Edward L.</name>
+            <email>jvstedlev@gmail.com</email>
+            <url>https://github.com/Justedlev</url>
+            <timezone>Asia/Jerusalem</timezone>
+        </developer>
+    </developers>
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <jar.manifest.packageName>dev.justedlev.kloudy</jar.manifest.packageName>
 
-        <spring-cloud.version>2023.0.1</spring-cloud.version>
-        <org.keycloak.admin-client.version>24.0.2</org.keycloak.admin-client.version>
-        <org.springdoc.openapi.version>2.5.0</org.springdoc.openapi.version>
-        <org.modelmapper.version>3.2.0</org.modelmapper.version>
-        <org.apache.commons.lang3.version>3.14.0</org.apache.commons.lang3.version>
-        <org.apache.commons.collections4.version>4.5.0-M1</org.apache.commons.collections4.version>
-        <org.keycloak.admin-client.version>24.0.3</org.keycloak.admin-client.version>
+        <spring-cloud.version>2023.0.2</spring-cloud.version>
+        <keycloak.admin-client.version>25.0.1</keycloak.admin-client.version>
+        <springdoc.openapi.version>2.6.0</springdoc.openapi.version>
+        <modelmapper.version>3.2.0</modelmapper.version>
+        <apache.commons.lang3.version>3.14.0</apache.commons.lang3.version>
+        <apache.commons.collections4.version>4.5.0-M2</apache.commons.collections4.version>
+        <keycloak.version>25.0.1</keycloak.version>
+        <vavr.version>0.10.4</vavr.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${org.apache.commons.lang3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${org.apache.commons.collections4.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-            <version>${org.modelmapper.version}</version>
-        </dependency>
+        <!--Spring Boot BEGIN-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -73,25 +76,12 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-envers</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -110,33 +100,78 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-admin-client</artifactId>
-            <version>${org.keycloak.admin-client.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${org.springdoc.openapi.version}</version>
+            <version>${springdoc.openapi.version}</version>
         </dependency>
+        <!--Spring Boot END-->
+
+        <!--Utils BEGIN-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${apache.commons.collections4.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.justedlev</groupId>
+            <artifactId>jtc4omm</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>${vavr.version}</version>
+        </dependency>
+        <!--Utils END-->
+
+        <!--Other BEGIN-->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <!--Other END-->
+
+        <!--Test BEGIN-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--Test END-->
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
@@ -179,14 +214,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <developers>
-        <developer>
-            <id>justedlev</id>
-            <name>Edward L.</name>
-            <email>jvstedlev@gmail.com</email>
-            <url>https://github.com/Justedlev</url>
-            <timezone>Asia/Jerusalem</timezone>
-        </developer>
-    </developers>
 </project>

@@ -23,13 +23,14 @@ public class Attachment extends Auditable implements Serializable {
     @Id
     @Column(name = "id")
     @UuidGenerator
+    @Setter(AccessLevel.PROTECTED)
     private UUID id;
     @Column(name = "filename", nullable = false)
     private String filename;
     @Column(name = "extension")
     private String extension;
-    @Column(name = "content_type", nullable = false)
-    private String contentType;
+    @Column(name = "type", nullable = false)
+    private String type;
     @Column(name = "length", nullable = false)
     private Long length;
 }

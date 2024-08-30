@@ -6,12 +6,8 @@ import dev.justedlev.kloudy.model.ViolationResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -24,9 +20,9 @@ import java.io.FileNotFoundException;
 public class GeneralResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {
             EntityNotFoundException.class,
-            FileNotFoundException.class
+            FileNotFoundException.class,
     })
-    public ResponseEntity<ErrorDetails> handleNotFountException(Exception ex, WebRequest request) {
+    public ResponseEntity<Object> handleNotFountException(Exception ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
         ErrorDetails errorDetailsResponse = ErrorDetails.builder()
                 .details(request.getDescription(false))
@@ -37,8 +33,9 @@ public class GeneralResponseEntityExceptionHandler extends ResponseEntityExcepti
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResponseEntity<ValidationErrorResponse> handleConstraintViolationException(ConstraintViolationException ex,
-                                                                                      WebRequest request) {
+    public ResponseEntity<Object>
+    handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
+
         log.error(ex.getMessage(), ex);
         var violations = ex.getConstraintViolations()
                 .stream()
@@ -55,26 +52,26 @@ public class GeneralResponseEntityExceptionHandler extends ResponseEntityExcepti
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
-                                                                  @NonNull HttpHeaders headers,
-                                                                  @NonNull HttpStatusCode status,
-                                                                  @NonNull WebRequest request) {
-
-        super.handleMethodArgumentNotValid(ex, headers, status, request);
-        log.error(ex.getMessage(), ex);
-        var violations = ex.getBindingResult().getFieldErrors()
-                .stream()
-                .map(current -> ViolationResponse.builder()
-                        .fieldName(current.getField())
-                        .message(current.getDefaultMessage())
-                        .build())
-                .toList();
-        var error = ValidationErrorResponse.builder()
-                .details(request.getDescription(false))
-                .violations(violations)
-                .build();
-
-        return new ResponseEntity<>(error, status);
-    }
+//    @Override
+//    protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
+//                                                                  @NonNull HttpHeaders headers,
+//                                                                  @NonNull HttpStatusCode status,
+//                                                                  @NonNull WebRequest request) {
+//
+//        return super.handleMethodArgumentNotValid(ex, headers, status, request);
+//        log.error(ex.getMessage(), ex);
+//        var violations = ex.getBindingResult().getFieldErrors()
+//                .stream()
+//                .map(current -> ViolationResponse.builder()
+//                        .fieldName(current.getField())
+//                        .message(current.getDefaultMessage())
+//                        .build())
+//                .toList();
+//        var error = ValidationErrorResponse.builder()
+//                .details(request.getDescription(false))
+//                .violations(violations)
+//                .build();
+//
+//        return new ResponseEntity<>(error, status);
+//    }
 }

@@ -3,6 +3,7 @@ eureka:
     instance-id: ${spring.application.name}
     app-group-name: justedlev-microservice
     appname: ${spring.application.name}
+    hostname: localhost
   client:
     service-url:
       defaultZone: ${SERVICE_DISCOVERY_ZONE}

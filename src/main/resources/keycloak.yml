@@ -1,18 +1,17 @@
 keycloak:
-  server-url: ${KEYCLOAK_HOST}
-  issuer-uri: ${KEYCLOAK_ISSUER_URI}
-  jwk-set-uri: ${KEYCLOAK_JWKS_URI}
-  introspection-uri: ${KEYCLOAK_INTROSPECTION_ENDPOINT}
-  token-uri: ${KEYCLOAK_TOKEN_ENDPOINT}
-  realm: ${KEYCLOAK_REALM}
+  server-url: ${KC_HOST}
+  issuer-uri: ${KC_ISSUER_URI}
+  jwk-set-uri: ${KC_JWKS_URI}
+  introspection-uri: ${KC_INTROSPECTION_URI}
+  token-uri: ${KC_TOKEN_URI}
+  auth-uri: ${KC_AUTH_URI}
+  realm: ${KC_REALM}
+  oidc-url: ${KC_OIDC_URL}
   client:
     name: kloudy
-    id: ${KEYCLOAK_CLIENT_ID}
-    secret: ${KEYCLOAK_CLIENT_SECRET}
+    id: ${KC_CLIENT_ID}
+    secret: ${KC_CLIENT_SECRET}
     username: su
     password: su
-  jwt-converter:
-    role-claims: realm_access.roles,resource_access.account.roles
-    username-attribute: preferred_username
   user-groups:
     - f9fef35f-a9cc-4ac1-a164-e9755700d56e

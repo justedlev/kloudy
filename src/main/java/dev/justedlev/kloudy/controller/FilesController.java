@@ -1,7 +1,11 @@
 package dev.justedlev.kloudy.controller;
 
-import dev.justedlev.kloudy.model.AttachmentInfoResponse;
+import dev.justedlev.kloudy.model.KloudyFileResponse;
 import dev.justedlev.kloudy.service.AttachmentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -12,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
+@Tag(name = "Files v1", description = "Files API")
 @RestController
 @RequestMapping("/v1/files")
 @RequiredArgsConstructor
@@ -19,18 +24,31 @@ import java.util.UUID;
 public class FilesController {
     private final AttachmentService attachmentService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AttachmentInfoResponse> upload(@RequestPart MultipartFile file) {
+    @Operation(summary = "Upload file")
+    @ApiResponse(responseCode = "200", description = "File successfully uploaded")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<KloudyFileResponse> upload(@RequestPart MultipartFile file) {
         return ResponseEntity.ok(attachmentService.upload(file));
     }
 
-    @GetMapping(value = "/{id}")
+    @Operation(summary = "Download file", parameters = {
+            @Parameter(name = "id", description = "Unique identifier of file")
+    })
+    @ApiResponse(responseCode = "200", description = "Starting to download")
+    @ApiResponse(responseCode = "404", description = "File not exists by given identifier")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> download(@PathVariable UUID id) {
         return attachmentService.download(id).toResponseEntity();
     }
 
+    @Operation(summary = "Delete file", parameters = {
+            @Parameter(name = "id", description = "Unique identifier of file")
+    })
+    @ApiResponse(responseCode = "204", description = "Deleted successfully")
+    @ApiResponse(responseCode = "404", description = "File not exists by given identifier")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<AttachmentInfoResponse> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok(attachmentService.delete(id));
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        attachmentService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

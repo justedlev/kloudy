@@ -33,7 +33,7 @@ build/
 .vscode/
 
 /.logs/
-/.mvn/
+*.jar
 /.db/
 /.tmp/
 /.temp/
