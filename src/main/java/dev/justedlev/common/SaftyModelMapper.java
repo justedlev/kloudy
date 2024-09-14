@@ -3,8 +3,8 @@ package dev.justedlev.common;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
-public class SimpleModelMapper extends ModelMapper {
-    public SimpleModelMapper() {
+public class SaftyModelMapper extends ModelMapper {
+    public SaftyModelMapper() {
         this.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setSkipNullEnabled(true);
