@@ -31,7 +31,7 @@
         <spring-cloud.version>2023.0.2</spring-cloud.version>
         <keycloak.admin-client.version>25.0.1</keycloak.admin-client.version>
         <springdoc.openapi.version>2.6.0</springdoc.openapi.version>
-        <modelmapper.version>3.2.0</modelmapper.version>
+        <modelmapper.version>3.2.1</modelmapper.version>
         <apache.commons.lang3.version>3.14.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.5.0-M2</apache.commons.collections4.version>
         <keycloak.version>25.0.1</keycloak.version>
