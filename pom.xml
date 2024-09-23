@@ -34,7 +34,7 @@
         <modelmapper.version>3.2.0</modelmapper.version>
         <apache.commons.lang3.version>3.14.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.5.0-M2</apache.commons.collections4.version>
-        <keycloak.version>25.0.1</keycloak.version>
+        <keycloak.version>25.0.6</keycloak.version>
         <vavr.version>0.10.4</vavr.version>
     </properties>
 
