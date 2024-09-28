@@ -7,6 +7,7 @@ spring:
     name: @project.name@
   config:
     import:
+      - classpath:/server.yml
       - classpath:/kloudy.yml
       - classpath:/management.yml
       - classpath:/security.yml
