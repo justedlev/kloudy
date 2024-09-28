@@ -21,6 +21,9 @@ spring:
   jackson:
     mapper:
       accept-case-insensitive-enums: true
+  data:
+    jdbc:
+      dialect: postgresql
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -41,6 +44,7 @@ spring:
       hibernate:
         enable_lazy_load_no_trans: true
         default_schema: kloudy
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     show-sql: false
     hibernate:
