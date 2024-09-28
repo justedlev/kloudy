@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
@@ -37,12 +36,20 @@ public class SecurityConfiguration {
                 .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
-                        .requestMatchers(properties.getWhiteList().toArray(String[]::new)).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/files/**").hasAnyAuthority("SCOPE_kloudy.files:read", "ROLE_user")
-                        .requestMatchers(HttpMethod.POST, "/v1/files/**").hasAnyAuthority("SCOPE_kloudy.files:write", "ROLE_user")
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(spec -> {
+                    properties.getWhitelist().forEach((k, v) -> spec.requestMatchers(k, v).permitAll());
+                    spec.requestMatchers(HttpMethod.GET, "/v1/files/**")
+                            .hasAnyAuthority(
+                                    "SCOPE_kloudy.files:read",
+                                    "ROLE_user"
+                            );
+                    spec.requestMatchers(HttpMethod.POST, "/v1/files/**")
+                            .hasAnyAuthority(
+                                    "SCOPE_kloudy.files:write",
+                                    "ROLE_user"
+                            );
+                    spec.anyRequest().authenticated();
+                })
                 .build();
     }
 
