@@ -1,5 +1,7 @@
 package dev.justedlev.common;
 
+import io.justedlev.commons.jtc4mm.LocalDateTimeToTimestamp;
+import io.justedlev.commons.jtc4mm.TimestampToLocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
@@ -8,6 +10,8 @@ public class SaftyModelMapper extends ModelMapper {
         this.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setSkipNullEnabled(true);
+        addConverter(new TimestampToLocalDateTime());
+        addConverter(new LocalDateTimeToTimestamp());
     }
 
     @Override
