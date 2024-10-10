@@ -27,9 +27,6 @@ public class FilesController {
 
     @Operation(summary = "Upload file")
     @ApiResponse(responseCode = "201", description = "File successfully uploaded")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<KloudyFileResponse> upload(@RequestPart MultipartFile file) {
-        var res = attachmentService.upload(file);
     @PostMapping(
             consumes = {
                     MediaType.MULTIPART_FORM_DATA_VALUE,

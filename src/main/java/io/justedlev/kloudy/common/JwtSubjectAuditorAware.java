@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class AuthAuditorAware implements AuditorAware<String> {
+public class JwtSubjectAuditorAware implements AuditorAware<String> {
     @NonNull
     @Override
     public Optional<String> getCurrentAuditor() {

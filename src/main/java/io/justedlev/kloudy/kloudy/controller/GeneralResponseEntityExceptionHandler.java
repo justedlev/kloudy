@@ -7,7 +7,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -24,12 +26,16 @@ public class GeneralResponseEntityExceptionHandler extends ResponseEntityExcepti
     })
     public ResponseEntity<Object> handleNotFountException(Exception ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
-        ErrorDetails errorDetailsResponse = ErrorDetails.builder()
+        var errorDetailsResponse = ErrorDetails.builder()
                 .details(request.getDescription(false))
                 .message(ex.getMessage())
                 .build();
+        var problemDetails = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        var res = ErrorResponse.builder(ex, problemDetails)
+                .detail(ex.getMessage())
+                .build();
 
-        return new ResponseEntity<>(errorDetailsResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)

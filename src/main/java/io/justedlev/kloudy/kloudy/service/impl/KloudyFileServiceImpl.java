@@ -39,7 +39,7 @@ public class KloudyFileServiceImpl implements KloudyFileService {
                 .map(multipartFileToAttachment::convert)
                 .map(kloudyFileRepository::save)
                 .orElseThrow();
-        var copyLocation = properties.getRootPath().resolve(attachment.getId().toString());
+        var copyLocation = properties.getRootPath().resolve(attachment.id().toString());
         Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 
         return KloudyFileResponse.builder()
@@ -57,7 +57,7 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     public void delete(UUID id) {
         var entity = kloudyFileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("File %s not found", id)));
-        delete(entity);
+        this.delete(entity);
     }
 
     @SneakyThrows
@@ -81,7 +81,7 @@ public class KloudyFileServiceImpl implements KloudyFileService {
         var entity = kloudyFileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("File %s not found", id)));
-        var path = properties.getRootPath().resolve(entity.getId().toString());
+        var path = properties.getRootPath().resolve(entity.id().toString());
 
         if (!Files.exists(path)) {
             kloudyFileRepository.delete(entity);

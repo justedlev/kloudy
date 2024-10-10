@@ -1,6 +1,6 @@
-package dev.justedlev.kloudy.configuration;
+package io.justedlev.kloudy.kloudy.configuration;
 
-import dev.justedlev.common.SaftyModelMapper;
+import io.justedlev.kloudy.common.SaftyModelMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
