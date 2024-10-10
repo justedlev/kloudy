@@ -5,8 +5,12 @@ spring:
       max-request-size: 10GB
   application:
     name: @project.name@
+  cloud:
+    config:
+      enabled: false
   config:
     import:
+      - 'optional:configserver:'
       - classpath:/server.yml
       - classpath:/kloudy.yml
       - classpath:/management.yml
