@@ -17,6 +17,8 @@ public class KeycloakProperties {
     private URI jwkSetUri;
     private URI introspectionUri;
     private URI tokenUri;
+    private URI authUri;
+    private URI oidcUri;
     private String realm;
     @NestedConfigurationProperty
     private KeycloakClientProperties client;

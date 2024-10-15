@@ -6,7 +6,7 @@ keycloak:
   token-uri: ${KC_TOKEN_URI}
   auth-uri: ${KC_AUTH_URI}
   realm: ${KC_REALM}
-  oidc-url: ${KC_OIDC_URL}
+  oidc-uri: ${KC_OIDC_URI}
   client:
     name: kloudy
     id: ${KC_CLIENT_ID}
