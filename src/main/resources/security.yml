@@ -5,14 +5,11 @@ spring:
         jwt:
           issuer-uri: ${keycloak.issuer-uri}
           jwk-set-uri: ${keycloak.jwk-set-uri}
+          authority-prefix: ROLE_
         opaquetoken:
           introspection-uri: ${keycloak.introspection-uri}
           client-id: ${keycloak.client-id}
           client-secret: ${keycloak.client-secret}
-    user:
-      name: ${USERNAME:justedlev}
-      password: ${PASSWORD:{example}}
-      roles: ${ROLES:system}
 security:
   whitelist:
     GET:
