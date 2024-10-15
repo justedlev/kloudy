@@ -16,6 +16,7 @@ import java.util.UUID;
 @Builder(builderClassName = "Builder")
 @Schema(description = "Kloudy file response")
 public class KloudyFileResponse implements Serializable {
+
     @Parameter(description = "Unique identifier of the file")
     private UUID id;
 
@@ -30,4 +31,5 @@ public class KloudyFileResponse implements Serializable {
 
     @Parameter(description = "File extension")
     private String extension;
+
 }

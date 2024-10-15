@@ -19,7 +19,9 @@ import org.springframework.data.envers.repository.config.EnableEnversRepositorie
         KeycloakClientProperties.class,
 })
 public class KloudyApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(KloudyApplication.class, args);
     }
+
 }
