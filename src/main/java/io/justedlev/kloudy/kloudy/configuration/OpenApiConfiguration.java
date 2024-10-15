@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.*;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.apache.hc.client5.http.auth.StandardAuthScheme;
+import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -21,7 +22,7 @@ import org.apache.hc.client5.http.auth.StandardAuthScheme;
                 version = "v1",
                 license = @License(
                         name = "Apache 2.0",
-                        url = "https://springdoc.org"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
                 )
         ),
         servers = {
@@ -31,20 +32,20 @@ import org.apache.hc.client5.http.auth.StandardAuthScheme;
                 ),
         },
         security = {
-                @SecurityRequirement(name = "OAuth 2"),
+                @SecurityRequirement(name = OpenApiConfiguration.OAUTH2),
         }
 )
 @SecurityScheme(
-        name = "OAuth 2",
+        name = OpenApiConfiguration.OAUTH2,
         description = "OAuth 2",
-        openIdConnectUrl = "${keycloak.oidc-url}",
+//        openIdConnectUrl = "${keycloak.oidc-url}",
         scheme = StandardAuthScheme.BEARER,
         type = SecuritySchemeType.OPENIDCONNECT,
         in = SecuritySchemeIn.HEADER,
         flows = @OAuthFlows(
                 authorizationCode = @OAuthFlow(
                         authorizationUrl = "${keycloak.auth-uri}",
-                        tokenUrl = "${keycloak.token-uri}",
+                        tokenUrl = "http://localhost:8765/sso/oauth2/token",
                         scopes = {
                                 @OAuthScope(name = "openid"),
                                 @OAuthScope(name = "profile"),
@@ -55,5 +56,7 @@ import org.apache.hc.client5.http.auth.StandardAuthScheme;
                 )
         )
 )
-public class OpenApiConfiguration {
+@Configuration
+public class OpenApiConfiguration { // NOSONAR
+    public static final String OAUTH2 = "oauth2";
 }

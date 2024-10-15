@@ -2,5 +2,9 @@ springdoc:
   show-actuator: true
   api-docs:
     enabled: true
+    version: openapi_3_1
   swagger-ui:
     enabled: true
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+
