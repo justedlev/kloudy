@@ -1,18 +1,26 @@
 package io.justedlev.kloudy.kloudy.service.impl;
 
-import io.justedlev.kloudy.kloudy.component.MultipartFileToAttachment;
+import io.justedlev.kloudy.kloudy.component.converter.KloudyFileToResponse;
+import io.justedlev.kloudy.kloudy.component.converter.MultipartFileToAttachment;
 import io.justedlev.kloudy.kloudy.configuration.properties.KloudyProperties;
 import io.justedlev.kloudy.kloudy.model.DownloadResponse;
+import io.justedlev.kloudy.kloudy.model.KloudyFileFilterParams;
 import io.justedlev.kloudy.kloudy.model.KloudyFileResponse;
 import io.justedlev.kloudy.kloudy.repository.KloudyFileRepository;
 import io.justedlev.kloudy.kloudy.repository.entity.KloudyFile;
 import io.justedlev.kloudy.kloudy.service.KloudyFileService;
+import io.vavr.CheckedFunction0;
+import io.vavr.control.Try;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -30,72 +39,67 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     private final KloudyFileRepository kloudyFileRepository;
     private final KloudyProperties properties;
     private final MultipartFileToAttachment multipartFileToAttachment;
+    private final KloudyFileToResponse kloudyFileToResponse;
 
     @SneakyThrows
     @Transactional
     @Override
     public KloudyFileResponse upload(@NonNull MultipartFile file) {
-        var attachment = Optional.of(file)
+        var entity = Optional.of(file)
                 .map(multipartFileToAttachment::convert)
                 .map(kloudyFileRepository::save)
                 .orElseThrow();
-        var copyLocation = properties.getRootPath().resolve(attachment.id().toString());
+        var copyLocation = properties.getRootPath().resolve(entity.id().toString());
         Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 
-        return KloudyFileResponse.builder()
-                .id(attachment.getId())
-                .mimeType(attachment.getType())
-                .extension(attachment.getExtension())
-                .filename(attachment.getFilename())
-                .length(attachment.getLength())
-                .build();
+        return kloudyFileToResponse.convert(entity);
+    }
+
+    @Override
+    public KloudyFileResponse getOne(UUID id) {
+        return kloudyFileRepository.findById(id)
+                .map(kloudyFileToResponse::convert)
+                .orElseThrow(notFound(id));
+    }
+
+    @Override
+    public Page<KloudyFileResponse> findAll(KloudyFileFilterParams params, Pageable pageable) {
+        Specification<KloudyFile> spec = (root, cq, cb) -> null;
+
+        return kloudyFileRepository.findAll(spec, pageable)
+                .map(kloudyFileToResponse::convert);
     }
 
     @SneakyThrows
     @Transactional
     @Override
     public void delete(UUID id) {
-        var entity = kloudyFileRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("File %s not found", id)));
-        this.delete(entity);
-    }
-
-    @SneakyThrows
-    private void delete(KloudyFile entity) {
-        var path = Optional.of(entity)
-                .map(KloudyFile::getId)
-                .map(UUID::toString)
-                .map(properties.getRootPath()::resolve)
-                .filter(Files::exists)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("File %s not found", entity.getId())));
-
-        if (Files.exists(path)) {
-            Files.delete(path);
-        }
-
-        kloudyFileRepository.deleteById(entity.getId());
+        Try.of(CheckedFunction0.constant(id))
+                .map(kloudyFileRepository::findById)
+                .mapTry(opt -> opt.orElseThrow(notFound(id)))
+                .map(file -> Pair.of(file.id(), properties.getRootPath().resolve(file.id().toString())))
+                .filter(pair -> Files.exists(pair.getRight()))
+                .andThenTry(pair -> Files.delete(pair.getRight()))
+                .onFailure(ex -> log.error("Failed delete file", ex))
+                .andFinally(() -> kloudyFileRepository.deleteById(id));
     }
 
     @Override
     public DownloadResponse download(UUID id) {
         var entity = kloudyFileRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("File %s not found", id)));
+                .orElseThrow(notFound(id));
         var path = properties.getRootPath().resolve(entity.id().toString());
-
-        if (!Files.exists(path)) {
-            kloudyFileRepository.delete(entity);
-            throw new EntityNotFoundException(String.format("File %s not found", entity.getId()));
-        }
-
-        var file = path.toFile();
 
         return DownloadResponse.builder()
                 .filename(entity.getFilename())
                 .extension(entity.getExtension())
-                .resource(new FileSystemResource(file))
-                .length(file.length())
+                .resource(new FileSystemResource(path))
+                .length(entity.getLength())
                 .contentType(MediaType.parseMediaType(entity.getType()))
                 .build();
+    }
+
+    private Supplier<RuntimeException> notFound(UUID id) {
+        return () -> new EntityNotFoundException("Kloudy file not found: " + id);
     }
 }

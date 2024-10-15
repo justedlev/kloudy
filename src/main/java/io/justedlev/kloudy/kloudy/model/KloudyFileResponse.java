@@ -2,20 +2,20 @@ package io.justedlev.kloudy.kloudy.model;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Accessors(chain = true)
 @Builder(builderClassName = "Builder")
 @Schema(description = "Kloudy file response")
-public class KloudyFileResponse implements Serializable {
+public class KloudyFileResponse extends AbstractVersionableResponse implements Serializable {
 
     @Parameter(description = "Unique identifier of the file")
     private UUID id;
