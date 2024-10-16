@@ -26,20 +26,18 @@ and [jvm options](/.vmoptions) to run the app locally
 
 ```xml
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Default" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" activateToolWindowBeforeRun="false">
+    <configuration default="false" name="Default" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
         <option name="ALTERNATIVE_JRE_PATH" value="17" />
         <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
         <option name="envFilePaths">
             <option value="$PROJECT_DIR$/.env" />
         </option>
-        <option name="INCLUDE_PROVIDED_SCOPE" value="false" />
         <module name="kloudy" />
         <selectedOptions>
-            <option name="spring.boot.profiles" visible="false" />
             <option name="environmentVariables" />
         </selectedOptions>
+        <option name="SPRING_BOOT_MAIN_CLASS" value="io.justedlev.msrv.kloudy.KloudyApplication" />
         <option name="VM_PARAMETERS" value="@.vmoptions" />
-        <option name="SPRING_BOOT_MAIN_CLASS" value="io.justedlev.msrv.kloudy.KloudyApplication"/>
         <method v="2">
             <option name="Make" enabled="true" />
         </method>
