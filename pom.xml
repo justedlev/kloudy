@@ -8,7 +8,7 @@
         <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>io.github.justedlev.microservice</groupId>
+    <groupId>io.github.justedlev.msrv</groupId>
     <artifactId>kloudy</artifactId>
     <version>1.1.0</version>
     <name>kloudy</name>
@@ -236,9 +236,6 @@
                 <version>3.4.2</version>
                 <configuration>
                     <archive>
-                        <manifest>
-                            <packageName>${jar.manifest.packageName}</packageName>
-                        </manifest>
                         <manifestEntries>
                             <Created-By>Justedlev</Created-By>
                             <Implementation-Title>${project.description}</Implementation-Title>

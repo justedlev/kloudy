@@ -38,8 +38,8 @@ and [jvm options](/.vmoptions) to run the app locally
             <option name="spring.boot.profiles" visible="false" />
             <option name="environmentVariables" />
         </selectedOptions>
-        <option name="SPRING_BOOT_MAIN_CLASS" value="io.justedlev.kloudy.kloudy.KloudyApplication" />
         <option name="VM_PARAMETERS" value="@.vmoptions" />
+        <option name="SPRING_BOOT_MAIN_CLASS" value="io.justedlev.msrv.kloudy.KloudyApplication"/>
         <method v="2">
             <option name="Make" enabled="true" />
         </method>
