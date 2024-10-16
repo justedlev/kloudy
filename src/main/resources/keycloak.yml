@@ -8,10 +8,5 @@ keycloak:
   realm: ${KC_REALM}
   oidc-uri: ${KC_OIDC_URI}
   client:
-    name: kloudy
     id: ${KC_CLIENT_ID}
     secret: ${KC_CLIENT_SECRET}
-    username: su
-    password: su
-  user-groups:
-    - f9fef35f-a9cc-4ac1-a164-e9755700d56e

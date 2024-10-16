@@ -14,9 +14,6 @@ import org.springframework.data.envers.repository.config.EnableEnversRepositorie
         KloudyProperties.class,
         SecurityProperties.class,
         KeycloakProperties.class,
-        KeycloakUserProperties.class,
-        KeycloakProperties.class,
-        KeycloakClientProperties.class,
 })
 public class KloudyApplication {
 

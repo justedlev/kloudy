@@ -54,7 +54,6 @@
         <modelmapper.version>3.2.1</modelmapper.version>
         <apache.commons.lang3.version>3.17.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.5.0-M2</apache.commons.collections4.version>
-        <keycloak.version>25.0.6</keycloak.version>
         <vavr.version>0.10.4</vavr.version>
     </properties>
 
@@ -191,11 +190,6 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-admin-client</artifactId>
-            <version>${keycloak.version}</version>
         </dependency>
         <!--Other END-->
 
