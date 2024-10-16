@@ -3,13 +3,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${keycloak.issuer-uri}
-          jwk-set-uri: ${keycloak.jwk-set-uri}
+          issuer-uri: ${KC_ISSUER_URI}
+          jwk-set-uri: ${KC_JWKS_URI}
           authority-prefix: ROLE_
         opaquetoken:
-          introspection-uri: ${keycloak.introspection-uri}
-          client-id: ${keycloak.client-id}
-          client-secret: ${keycloak.client-secret}
+          introspection-uri: ${KC_INTROSPECTION_URI}
+          client-id: ${KC_CLIENT_ID}
+          client-secret: ${KC_CLIENT_SECRET}
 security:
   whitelist:
     GET:
