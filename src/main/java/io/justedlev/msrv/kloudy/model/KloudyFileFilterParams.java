@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = true)
 @Builder(builderClassName = "Builder")
 public class KloudyFileFilterParams implements Serializable {
 

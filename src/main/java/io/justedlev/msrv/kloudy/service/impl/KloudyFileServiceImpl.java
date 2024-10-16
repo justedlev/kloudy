@@ -1,8 +1,8 @@
 package io.justedlev.msrv.kloudy.service.impl;
 
+import io.justedlev.msrv.kloudy.configuration.properties.KloudyProperties;
 import io.justedlev.msrv.kloudy.converter.KloudyFileToResponse;
 import io.justedlev.msrv.kloudy.converter.MultipartFileToAttachment;
-import io.justedlev.msrv.kloudy.configuration.properties.KloudyProperties;
 import io.justedlev.msrv.kloudy.model.DownloadResponse;
 import io.justedlev.msrv.kloudy.model.KloudyFileFilterParams;
 import io.justedlev.msrv.kloudy.model.KloudyFileResponse;
@@ -70,7 +70,6 @@ public class KloudyFileServiceImpl implements KloudyFileService {
                 .map(kloudyFileToResponse::convert);
     }
 
-    @SneakyThrows
     @Transactional
     @Override
     public void delete(UUID id) {
@@ -80,8 +79,8 @@ public class KloudyFileServiceImpl implements KloudyFileService {
                 .map(file -> Pair.of(file.id(), properties.getRootPath().resolve(file.id().toString())))
                 .filter(pair -> Files.exists(pair.getRight()))
                 .andThenTry(pair -> Files.delete(pair.getRight()))
-                .onFailure(ex -> log.error("Failed delete file", ex))
-                .andFinally(() -> kloudyFileRepository.deleteById(id));
+                .andFinallyTry(() -> kloudyFileRepository.deleteById(id))
+                .onFailure(ex -> log.error("Failed delete file", ex));
     }
 
     @Override

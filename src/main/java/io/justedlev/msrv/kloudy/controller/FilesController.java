@@ -52,7 +52,7 @@ public class FilesController {
     public ResponseEntity<KloudyFileResponse> upload(@RequestPart(name = "f") MultipartFile file) {
         var res = kloudyFileService.upload(file);
         var location = UriComponentsBuilder.fromPath(CONTEXT_PATH)
-                .path("/" + res.getId())
+                .path("/" + res.id())
                 .build()
                 .toUri();
 

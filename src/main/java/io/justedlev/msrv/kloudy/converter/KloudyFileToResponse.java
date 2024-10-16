@@ -8,8 +8,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class KloudyFileToResponse implements Converter<KloudyFile, KloudyFileResponse> {
@@ -18,10 +16,6 @@ public class KloudyFileToResponse implements Converter<KloudyFile, KloudyFileRes
     @Nullable
     @Override
     public KloudyFileResponse convert(@Nullable KloudyFile source) {
-        return Optional.ofNullable(source).map(this::doConvert).orElse(null);
-    }
-
-    private KloudyFileResponse doConvert(KloudyFile entity) {
-        return mapper.map(entity, KloudyFileResponse.class).setMimeType(entity.getType());
+        return mapper.map(source, KloudyFileResponse.class);
     }
 }

@@ -4,18 +4,20 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
+@With
 @AllArgsConstructor
 @NoArgsConstructor
-@Accessors(chain = true)
-@Builder(builderClassName = "Builder")
+@Accessors(chain = true, fluent = true)
+@SuperBuilder
 @Schema(description = "Kloudy file response")
-public class KloudyFileResponse extends AbstractVersionableResponse implements Serializable {
+public class KloudyFileResponse implements Serializable {
 
     @Parameter(description = "Unique identifier of the file")
     private UUID id;
@@ -39,7 +41,7 @@ public class KloudyFileResponse extends AbstractVersionableResponse implements S
     private String filename;
 
     @Parameter(description = "MIME type")
-    private String mimeType;
+    private String type;
 
     @Parameter(description = "File length in bytes")
     private Long length;
