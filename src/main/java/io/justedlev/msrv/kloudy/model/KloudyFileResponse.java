@@ -20,6 +20,21 @@ public class KloudyFileResponse extends AbstractVersionableResponse implements S
     @Parameter(description = "Unique identifier of the file")
     private UUID id;
 
+    @Parameter(description = "ID of creator")
+    private String createdBy;
+
+    @Parameter(description = "Created at")
+    private LocalDateTime createdAt;
+
+    @Parameter(description = "ID of modifier")
+    private String modifiedBy;
+
+    @Parameter(description = "Last modified at")
+    private LocalDateTime modifiedAt;
+
+    @Parameter(description = "File version")
+    private Long version;
+
     @Parameter(description = "Name of the file")
     private String filename;
 
