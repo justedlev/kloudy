@@ -38,23 +38,29 @@ import org.springframework.context.annotation.Configuration;
 @SecurityScheme(
         name = OpenApiConfiguration.OAUTH2,
         description = "OAuth 2",
-//        openIdConnectUrl = "${keycloak.oidc-url}",
+        openIdConnectUrl = "${keycloak.oidc-url}",
         scheme = StandardAuthScheme.BEARER,
         type = SecuritySchemeType.OPENIDCONNECT,
-        in = SecuritySchemeIn.HEADER,
-        flows = @OAuthFlows(
-                authorizationCode = @OAuthFlow(
-                        authorizationUrl = "${keycloak.auth-uri}",
-                        tokenUrl = "http://localhost:8765/sso/oauth2/token",
-                        scopes = {
-                                @OAuthScope(name = "openid"),
-                                @OAuthScope(name = "profile"),
-                                @OAuthScope(name = "email"),
-                                @OAuthScope(name = "kloudy.files:read"),
-                                @OAuthScope(name = "kloudy.files:write"),
-                        }
-                )
-        )
+        in = SecuritySchemeIn.HEADER
+//        flows = @OAuthFlows(
+//                authorizationCode = @OAuthFlow(
+//                        authorizationUrl = "${keycloak.auth-uri}",
+//                        tokenUrl = "http://localhost:8765/sso/oauth2/token",
+//                        refreshUrl = "http://localhost:8765/sso/oauth2/token"
+//                ),
+//                clientCredentials = @OAuthFlow(
+//                        authorizationUrl = "${keycloak.auth-uri}",
+//                        tokenUrl = "http://localhost:8765/sso/oauth2/token",
+//                        refreshUrl = "http://localhost:8765/sso/oauth2/token",
+//                        scopes = {
+//                                @OAuthScope(name = "openid"),
+//                                @OAuthScope(name = "profile"),
+//                                @OAuthScope(name = "email"),
+//                                @OAuthScope(name = "kloudy.files:read"),
+//                                @OAuthScope(name = "kloudy.files:write"),
+//                        }
+//                )
+//        )
 )
 @Configuration
 public class OpenApiConfiguration { // NOSONAR
