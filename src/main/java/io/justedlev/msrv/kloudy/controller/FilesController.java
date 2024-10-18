@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
-@Tag(name = "Files API", description = "Files API v1")
+@Tag(name = "Files", description = "Files API v1")
 @RestController
 @RequestMapping(FilesController.CONTEXT_PATH)
 @RequiredArgsConstructor
@@ -52,16 +52,20 @@ public class FilesController {
     public ResponseEntity<KloudyFileResponse> upload(@RequestPart(name = "f") MultipartFile file) {
         var res = kloudyFileService.upload(file);
         var location = UriComponentsBuilder.fromPath(CONTEXT_PATH)
-                .path("/" + res.id())
+                .path("/" + res.getId())
                 .build()
                 .toUri();
 
         return ResponseEntity.created(location).body(res);
     }
 
-    @Operation(summary = "Page of files info", parameters = {
-            @Parameter(name = "id", description = "Unique identifier of file"),
-    })
+    @Operation(
+            summary = "Page of files info",
+            description = "Retrieve a Kloudy file info by ID",
+            parameters = {
+                    @Parameter(name = "id", description = "Unique identifier of file"),
+            }
+    )
     @ApiResponse(responseCode = "200", description = "File info")
     @ApiResponse(
             responseCode = "404",
@@ -76,8 +80,12 @@ public class FilesController {
         return ResponseEntity.ok(kloudyFileService.getOne(id));
     }
 
+    @Operation(
+            summary = "Retrieve files by search",
+            description = "Get a sliced list of Kloydy file (page)"
+    )
+    @ApiResponse(responseCode = "200")
     @PageableAsQueryParam
-    @ApiResponse(responseCode = "200", description = "Page of exist files")
     @GetMapping(value = "/search")
     public ResponseEntity<PagedModel<KloudyFileResponse>>
     search(@Valid @ParameterObject KloudyFileFilterParams params, @ParameterObject Pageable pageable) {

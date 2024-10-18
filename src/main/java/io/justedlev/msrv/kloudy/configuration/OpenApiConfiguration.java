@@ -6,7 +6,8 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.security.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.apache.hc.client5.http.auth.StandardAuthScheme;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +39,7 @@ import org.springframework.context.annotation.Configuration;
 @SecurityScheme(
         name = OpenApiConfiguration.OAUTH2,
         description = "OAuth 2",
-        openIdConnectUrl = "${keycloak.oidc-url}",
+        openIdConnectUrl = "${keycloak.oidc-uri}",
         scheme = StandardAuthScheme.BEARER,
         type = SecuritySchemeType.OPENIDCONNECT,
         in = SecuritySchemeIn.HEADER
