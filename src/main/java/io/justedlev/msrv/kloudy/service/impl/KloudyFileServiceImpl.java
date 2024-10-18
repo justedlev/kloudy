@@ -18,9 +18,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,11 +62,12 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     }
 
     @Override
-    public Page<KloudyFileResponse> findAll(KloudyFileFilterParams params, Pageable pageable) {
-        Specification<KloudyFile> spec = (root, cq, cb) -> null;
+    public PagedModel<KloudyFileResponse> findAll(KloudyFileFilterParams params, Pageable pageable) {
+        var spec = KloydyFileSpecifications.freeSearch(params.getQ());
+        var page = kloudyFileRepository.findAll(spec, pageable);
+        var res = page.map(kloudyFileToResponse::convert);
 
-        return kloudyFileRepository.findAll(spec, pageable)
-                .map(kloudyFileToResponse::convert);
+        return new PagedModel<>(res);
     }
 
     @Transactional
