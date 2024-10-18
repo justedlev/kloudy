@@ -1,6 +1,5 @@
--Xmx2G
--Xms125M
 -Duser.timezone=UTC
+-Duser.language=en
 -Dspring.devtools.add-properties=true
 -Dlogging.level.web=trace
 -Dlogging.level.sql=trace
