@@ -1,6 +1,7 @@
 package io.justedlev.msrv.kloudy.configuration.security;
 
 import io.justedlev.msrv.kloudy.configuration.properties.SecurityProperties;
+import io.justedlev.msrv.kloudy.controller.FilesController;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,12 +39,13 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(spec -> {
                     properties.getWhitelist().forEach((k, v) -> spec.requestMatchers(k, v).permitAll());
-                    spec.requestMatchers(HttpMethod.GET, "/v1/files/**")
+                    var filesPath = FilesController.CONTEXT_PATH + "/**";
+                    spec.requestMatchers(HttpMethod.GET, filesPath)
                             .hasAnyAuthority(
                                     "SCOPE_kloudy.files:read",
                                     "ROLE_user"
                             );
-                    spec.requestMatchers(HttpMethod.POST, "/v1/files/**")
+                    spec.requestMatchers(HttpMethod.POST, filesPath)
                             .hasAnyAuthority(
                                     "SCOPE_kloudy.files:write",
                                     "ROLE_user"

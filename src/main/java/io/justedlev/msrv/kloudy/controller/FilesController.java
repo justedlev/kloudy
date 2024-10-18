@@ -3,6 +3,7 @@ package io.justedlev.msrv.kloudy.controller;
 import io.justedlev.msrv.kloudy.model.KloudyFileFilterParams;
 import io.justedlev.msrv.kloudy.model.KloudyFileResponse;
 import io.justedlev.msrv.kloudy.service.KloudyFileService;
+import io.justedlev.sb3c.Auditable_;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,13 +11,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedModel;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.*;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,13 +51,19 @@ public class FilesController {
 
     private final KloudyFileService kloudyFileService;
 
-    @Operation(summary = "Upload file")
+    @Operation(
+            summary = "Upload file",
+            description = "Upload the single Kloudy file",
+            parameters = {
+                    @Parameter(name = "f", description = "The file that can be uploaded")
+            }
+    )
     @ApiResponse(responseCode = "201", description = "File successfully uploaded")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<KloudyFileResponse> upload(@RequestPart(name = "f") MultipartFile file) {
+    public ResponseEntity<KloudyFileResponse> upload(@RequestPart(name = "f") @NotNull MultipartFile file) {
         var res = kloudyFileService.upload(file);
         var location = UriComponentsBuilder.fromPath(CONTEXT_PATH)
-                .path("/" + res.getId())
+                .path(AntPathMatcher.DEFAULT_PATH_SEPARATOR + res.getId())
                 .build()
                 .toUri();
 
@@ -76,19 +87,22 @@ public class FilesController {
             )
     )
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<KloudyFileResponse> get(@PathVariable @NonNull UUID id) {
+    public ResponseEntity<KloudyFileResponse> get(@PathVariable @NotNull UUID id) {
         return ResponseEntity.ok(kloudyFileService.getOne(id));
     }
 
-    @Operation(
-            summary = "Retrieve files by search",
-            description = "Get a sliced list of Kloydy file (page)"
-    )
+    @Operation(summary = "Retrieve files by search", description = "Get a sliced list of Kloudy file (page)")
     @ApiResponse(responseCode = "200")
     @PageableAsQueryParam
     @GetMapping(value = "/search")
-    public ResponseEntity<PagedModel<KloudyFileResponse>>
-    search(@Valid @ParameterObject KloudyFileFilterParams params, @ParameterObject Pageable pageable) {
+    public ResponseEntity<PagedModel<KloudyFileResponse>> search(
+            @ParameterObject
+            @Valid
+            KloudyFileFilterParams params,
+            @ParameterObject
+            @SortDefault(value = Auditable_.CREATED_AT, direction = Sort.Direction.DESC)
+            Pageable pageable
+    ) {
         return ResponseEntity.ok(kloudyFileService.findAll(params, pageable));
     }
 
