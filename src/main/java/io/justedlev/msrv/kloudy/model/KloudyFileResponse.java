@@ -14,7 +14,7 @@ import java.util.UUID;
 @With
 @AllArgsConstructor
 @NoArgsConstructor
-@Accessors(chain = true, fluent = true)
+@Accessors(chain = true)
 @SuperBuilder
 @Schema(description = "Kloudy file response")
 public class KloudyFileResponse implements Serializable {
