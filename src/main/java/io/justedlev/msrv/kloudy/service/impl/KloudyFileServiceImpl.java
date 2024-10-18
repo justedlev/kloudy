@@ -7,7 +7,7 @@ import io.justedlev.msrv.kloudy.model.DownloadResponse;
 import io.justedlev.msrv.kloudy.model.KloudyFileFilterParams;
 import io.justedlev.msrv.kloudy.model.KloudyFileResponse;
 import io.justedlev.msrv.kloudy.repository.KloudyFileRepository;
-import io.justedlev.msrv.kloudy.repository.entity.KloudyFile;
+import io.justedlev.msrv.kloudy.repository.specs.KloydyFileSpecifications;
 import io.justedlev.msrv.kloudy.service.KloudyFileService;
 import io.vavr.CheckedFunction0;
 import io.vavr.control.Try;
