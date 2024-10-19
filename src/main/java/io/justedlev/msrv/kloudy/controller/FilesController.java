@@ -54,11 +54,11 @@ public class FilesController {
     @Operation(
             summary = "Upload file",
             description = "Upload the single Kloudy file",
-            parameters = {
-                    @Parameter(name = "f", description = "The file that can be uploaded")
-            }
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "The file that can be uploaded"
+            )
     )
-    @ApiResponse(responseCode = "201", description = "File successfully uploaded")
+    @ApiResponse(responseCode = "201")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<KloudyFileResponse> upload(@RequestPart(name = "f") @NotNull MultipartFile file) {
         var res = kloudyFileService.upload(file);
@@ -71,28 +71,34 @@ public class FilesController {
     }
 
     @Operation(
-            summary = "Page of files info",
+            summary = "Get file",
             description = "Retrieve a Kloudy file info by ID",
             parameters = {
                     @Parameter(name = "id", description = "Unique identifier of file"),
             }
     )
-    @ApiResponse(responseCode = "200", description = "File info")
+    @ApiResponse(responseCode = "200")
     @ApiResponse(
             responseCode = "404",
-            description = "File not exists by given identifier",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
                     schema = @Schema(implementation = ProblemDetail.class)
             )
     )
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public ResponseEntity<KloudyFileResponse> get(@PathVariable @NotNull UUID id) {
         return ResponseEntity.ok(kloudyFileService.getOne(id));
     }
 
     @Operation(summary = "Retrieve files by search", description = "Get a sliced list of Kloudy file (page)")
     @ApiResponse(responseCode = "200")
+    @ApiResponse(
+            responseCode = "400",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+                    schema = @Schema(implementation = ProblemDetail.class)
+            )
+    )
     @PageableAsQueryParam
     @GetMapping(value = "/search")
     public ResponseEntity<PagedModel<KloudyFileResponse>> search(
@@ -111,12 +117,10 @@ public class FilesController {
     })
     @ApiResponse(
             responseCode = "200",
-            description = "Starting to download",
             content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     )
     @ApiResponse(
             responseCode = "404",
-            description = "File not exists by given identifier",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
                     schema = @Schema(implementation = ProblemDetail.class)
@@ -144,10 +148,9 @@ public class FilesController {
     @Operation(summary = "Delete file", parameters = {
             @Parameter(name = "id", description = "Unique identifier of file"),
     })
-    @ApiResponse(responseCode = "204", description = "Deleted successfully")
+    @ApiResponse(responseCode = "204")
     @ApiResponse(
             responseCode = "404",
-            description = "File not exists by given identifier",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
                     schema = @Schema(implementation = ProblemDetail.class)

@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
                 ),
                 description = "Kloudy APIs Documentation",
                 title = "OpenApi specification - Kloudy APIs",
-                version = "v1",
+                version = "${spring.application.version}",
                 license = @License(
                         name = "Apache 2.0",
                         url = "https://www.apache.org/licenses/LICENSE-2.0.txt"

@@ -1,10 +1,10 @@
 package io.justedlev.msrv.kloudy.model;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.springframework.http.MediaType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,37 +16,74 @@ import java.util.UUID;
 @NoArgsConstructor
 @Accessors(chain = true)
 @SuperBuilder
-@Schema(description = "Kloudy file response")
+@Schema(title = "Kloudy File Response", description = "Kloudy file model information")
 public class KloudyFileResponse implements Serializable {
 
-    @Parameter(description = "Unique identifier of the file")
+    @Schema(
+            title = "ID",
+            description = "Unique identifier of the file",
+            accessMode = Schema.AccessMode.READ_ONLY
+    )
     private UUID id;
 
-    @Parameter(description = "ID of creator")
+    @Schema(
+            title = "Created By",
+            description = "ID of creator"
+    )
     private String createdBy;
 
-    @Parameter(description = "Created at")
+    @Schema(
+            title = "Created At",
+            description = "Date and time of creation",
+            format = "ISO 8601",
+            example = "2024-10-18 23:48:43.344"
+    )
     private LocalDateTime createdAt;
 
-    @Parameter(description = "ID of modifier")
+    @Schema(
+            title = "Modified By",
+            description = "ID of modifier"
+    )
     private String modifiedBy;
 
-    @Parameter(description = "Last modified at")
+    @Schema(
+            title = "Modified At",
+            description = "Date and time of last modification",
+            format = "ISO 8601",
+            example = "2024-10-18 23:48:43.344"
+    )
     private LocalDateTime modifiedAt;
 
-    @Parameter(description = "File version")
+    @Schema(
+            title = "Version",
+            description = "Version of the file"
+    )
     private Long version;
 
-    @Parameter(description = "Name of the file")
+    @Schema(
+            title = "Filename",
+            description = "Name of the file"
+    )
     private String filename;
 
-    @Parameter(description = "MIME type")
+    @Schema(
+            title = "Type",
+            description = "MIME type",
+            examples = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE}
+    )
     private String type;
 
-    @Parameter(description = "File length in bytes")
+    @Schema(
+            title = "Length",
+            description = "File length in bytes"
+    )
     private Long length;
 
-    @Parameter(description = "File extension")
+    @Schema(
+            title = "Extension",
+            description = "File extension",
+            examples = {"exe", "png", "mp3"}
+    )
     private String extension;
 
 }
