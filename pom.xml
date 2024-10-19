@@ -54,7 +54,7 @@
         <modelmapper.version>3.2.1</modelmapper.version>
         <apache.commons.lang3.version>3.17.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.5.0-M2</apache.commons.collections4.version>
-        <vavr.version>0.10.4</vavr.version>
+        <vavr.version>0.10.5</vavr.version>
     </properties>
 
     <dependencyManagement>
