@@ -30,7 +30,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.UUID;
 
 @Tag(name = "Files", description = "Files API v1")
@@ -41,13 +40,7 @@ import java.util.UUID;
 public class FilesController {
     public static final String CONTEXT_PATH = "/v1/files"; //NOSONAR
 
-    private static final Set<String> INLINE_MEDIA_TYPES = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-
-    static {
-        INLINE_MEDIA_TYPES.add("video");
-        INLINE_MEDIA_TYPES.add("image");
-        INLINE_MEDIA_TYPES.add("audio");
-    }
+    private static final Set<String> INLINE_MEDIA_TYPES = Set.of("video", "image", "audio");
 
     private final KloudyFileService kloudyFileService;
 
