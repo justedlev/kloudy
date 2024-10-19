@@ -8,6 +8,7 @@ spring:
       max-request-size: 10GB
   application:
     name: @project.name@
+    version: @project.version@
   cloud:
     config:
       enabled: false
