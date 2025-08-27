@@ -51,7 +51,7 @@
         <modelmapper.version>3.2.4</modelmapper.version>
         <apache.commons.lang3.version>3.18.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.5.0</apache.commons.collections4.version>
-        <vavr.version>0.10.6</vavr.version>
+        <vavr.version>0.10.7</vavr.version>
         <jtc4mm.version>0.21.13</jtc4mm.version>
         <sb3c.version>2.0.0</sb3c.version>
     </properties>
