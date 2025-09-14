@@ -52,7 +52,6 @@
         <apache.commons.lang3.version>3.18.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.5.0</apache.commons.collections4.version>
         <vavr.version>0.10.7</vavr.version>
-        <jtc4mm.version>0.21.13</jtc4mm.version>
         <sb3c.version>2.0.0</sb3c.version>
     </properties>
 
@@ -159,16 +158,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${apache.commons.collections4.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-            <version>${modelmapper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.justedlev.commons</groupId>
-            <artifactId>jtc4mm</artifactId>
-            <version>${jtc4mm.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
