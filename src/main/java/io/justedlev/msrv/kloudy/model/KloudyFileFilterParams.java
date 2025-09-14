@@ -14,8 +14,6 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @lombok.Builder(builderClassName = "Builder")
 public class KloudyFileFilterParams implements Serializable {
-
     @Parameter(description = "Free text")
     private String q;
-
 }
