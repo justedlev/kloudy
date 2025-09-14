@@ -3,7 +3,6 @@ package io.justedlev.msrv.kloudy.configuration.properties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 
 import java.util.Map;
@@ -27,9 +26,9 @@ import java.util.Map;
  */
 @Getter
 @Setter
-@Configuration
-@ConfigurationProperties("security")
-public class SecurityProperties {
+@ConfigurationProperties(KloudySecurityConfigurationProperties.PREFIX)
+public class KloudySecurityConfigurationProperties {
+    public static final String PREFIX = KloudyConfigurationProperties.PREFIX + ".security";
     /**
      * A map that holds the HTTP method as the key and an array of allowed endpoint patterns as the value.
      * <p>
