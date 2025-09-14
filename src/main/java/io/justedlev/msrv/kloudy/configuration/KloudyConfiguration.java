@@ -1,44 +1,49 @@
 package io.justedlev.msrv.kloudy.configuration;
 
-import io.justedlev.msrv.kloudy.common.JwtSubjectAuditorAware;
-import io.justedlev.msrv.kloudy.common.SaftyModelMapper;
-import io.justedlev.msrv.kloudy.configuration.properties.KloudyProperties;
+import io.justedlev.msrv.kloudy.configuration.properties.KloudyConfigurationProperties;
+import io.justedlev.msrv.kloudy.configuration.properties.KloudyStoreConfigurationProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
+import org.apache.commons.lang.SystemUtils;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermissions;
 
 @Slf4j
 @Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
+@ConditionalOnBooleanProperty(prefix = KloudyConfigurationProperties.PREFIX, name = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties({
+        KloudyConfigurationProperties.class,
+        KloudyStoreConfigurationProperties.class,
+        KloudyStoreConfigurationProperties.class,
+})
 public class KloudyConfiguration {
 
     @Bean
-    public ModelMapper modelMapper() {
-        return new SaftyModelMapper();
-    }
-
-    @Bean
-    public AuditorAware<String> auditorAware() {
-        return new JwtSubjectAuditorAware();
-    }
-
-    @Bean
-    public CommandLineRunner kloudyPreLoadCmd(KloudyProperties props) {
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public CommandLineRunner kloudyStoreInitializer(KloudyStoreConfigurationProperties props) {
         return args -> {
 
-            if (Files.exists(props.getRoot())) {
-                log.info("Kloudy root directory found: {}", props.getRoot().toAbsolutePath());
+            if (Files.exists(props.getLocation())) {
+                log.info("Kloudy root directory found: {}", props.getLocation().toAbsolutePath());
                 return;
             }
 
-            Files.createDirectory(props.getRoot());
-            log.debug("Created kloudy root directory: {}", props.getRoot().toAbsolutePath());
+            if (SystemUtils.IS_OS_WINDOWS) {
+                var root = Files.createDirectory(props.getLocation());
+                log.info("Kloudy root directory created: {}", root);
+            } else {
+                var perms = PosixFilePermissions.fromString(props.getPermissions());
+                var attrs = PosixFilePermissions.asFileAttribute(perms);
+                var root = Files.createDirectory(props.getLocation(), attrs);
+                log.info("kloudy.root={} with perms={}", root, perms);
+            }
 
         };
     }
