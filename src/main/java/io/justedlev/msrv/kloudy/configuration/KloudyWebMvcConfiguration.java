@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfiguration implements WebMvcConfigurer {
+public class KloudyWebMvcConfiguration implements WebMvcConfigurer {
     private static final String ALL = "*";
 
     @Override
