@@ -10,7 +10,7 @@
     <groupId>io.github.justedlev.msrv</groupId>
     <artifactId>kloudy</artifactId>
     <version>0.1.0</version>
-    <name>kloudy</name>
+    <name>Kloudy</name>
     <description>Kloudy - File storage</description>
     <url>https://github.com/justedlev/${project.artifactId}</url>
     <licenses>
