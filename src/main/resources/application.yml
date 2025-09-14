@@ -7,23 +7,34 @@ server:
     include-stacktrace: never
     include-message: always
     include-binding-errors: always
+  tomcat:
+    max-swallow-size: 0
 spring:
+  web:
+    resources:
+      chain:
+        compressed: true
+      cache:
+        cachecontrol:
+          max-age: 3600
+          must-revalidate: true
   mvc:
     problemdetails:
       enabled: true
   servlet:
     multipart:
-      max-file-size: 10GB
-      max-request-size: 10GB
+      max-file-size: 200MB
+      max-request-size: 200MB
+      file-size-threshold: 2MB
+      location: ${java.io.tmpdir}
   application:
-    name: @project.name@
-    version: @project.version@
+    name: kloudy
   cloud:
     config:
-      enabled: false
+      enabled: true
   config:
     import:
-      - classpath:/kloudy.yml
+      - 'optional:configserver:'
   devtools:
     restart:
       enabled: false
@@ -34,9 +45,6 @@ spring:
     jdbc:
       dialect: postgresql
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:
@@ -44,7 +52,6 @@ spring:
         hibernate:
           envers:
             audit_strategy: org.hibernate.envers.strategy.ValidityAuditStrategy
-            default_schema: history
             audit_table_suffix: _history
             revision_field_name: rev_id
             revision_type_field_name: rev_type
@@ -52,7 +59,6 @@ spring:
       #            audit_table_prefix:
       hibernate:
         enable_lazy_load_no_trans: true
-        default_schema: kloudy
         dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     show-sql: false
@@ -64,6 +70,24 @@ spring:
       mode: always
   security:
     oauth2:
+      client:
+        provider:
+          keycloak:
+            token-uri: ${KC_TOKEN_URI}
+            issuer-uri: ${KC_ISSUER_URI}
+            authorization-uri: ${KC_AUTH_URI}
+            jwk-set-uri: ${KC_JWKS_URI}
+            user-info-uri: ${KC_USER_INFO_URI}
+            user-name-attribute: preferred_username
+            user-info-authentication-method: header
+        registration:
+          kloudy:
+            provider: keycloak
+            client-id: ${KC_CLIENT_ID}
+            client-secret: ${KC_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope:
+              - discovery:rw
       resourceserver:
         jwt:
           issuer-uri: ${KC_ISSUER_URI}
@@ -78,20 +102,24 @@ eureka:
     app-group-name: justedlev-msrv
     appname: ${spring.application.name}
     hostname: localhost
+    prefer-ip-address: true
+    metadata-map:
+      prometheus:
+        scrape: true
+        path: /actuator/prometheus
   client:
+    restclient:
+      enabled: true
     service-url:
-      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:8761/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 logging:
-  file:
-    path: ./logs
-    name: ${LOGGING_FILE_PATH:${logging.file.path}}/latest.log
-  threshold:
-    console: info
   level:
     root: info
     web: debug
     sql: debug
 management:
+  server:
+    port: 7901
   info:
     build:
       enabled: true
@@ -101,30 +129,37 @@ management:
       enabled: true
     java:
       enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: '*'
-security:
-  whitelist:
-    GET:
-      - /webjars/**
-      - /v3/api-docs/**
-      - /*/v3/api-docs/**
-      - /*/*/v3/api-docs/**
-      - /swagger-ui.html
-      - /swagger-ui/**
-      - /swagger-resources
-      - /swagger-resources/**
-      - /configuration/ui
-      - /configuration/security
-      - /actuator/**
-      - /*/actuator/**
-      - /error
-    POST:
-      - /sso/logout
-      - /logout
 springdoc:
   show-actuator: true
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
+kloudy:
+  enabled: true
+  security:
+    whitelist:
+      GET:
+        - /webjars/**
+        - /v3/api-docs/**
+        - /*/v3/api-docs/**
+        - /*/*/v3/api-docs/**
+        - /swagger-ui.html
+        - /swagger-ui/**
+        - /swagger-resources
+        - /swagger-resources/**
+        - /configuration/ui
+        - /configuration/security
+        - /actuator/**
+        - /*/actuator/**
+        - /error
+      POST:
+        - /sso/logout
+        - /logout
