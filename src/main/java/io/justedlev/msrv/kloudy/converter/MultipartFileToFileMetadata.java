@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 
 @Component
-public class MultipartFileToAttachment implements Converter<MultipartFile, FileMetadata> {
+public class MultipartFileToFileMetadata implements Converter<MultipartFile, FileMetadata> {
     @Nullable
     @Override
     public FileMetadata convert(@Nullable MultipartFile source) {
