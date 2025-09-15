@@ -30,7 +30,7 @@ public class FileMetadataSpecifications {
                 .map(exp -> cb.or(
                         cb.like(root.get(FileMetadata_.filename), exp),
                         cb.like(root.get(FileMetadata_.extension), exp),
-                        cb.like(root.get(FileMetadata_.type), exp)
+                        cb.like(root.get(FileMetadata_.contentType).as(String.class), exp)
                 ))
                 .orElse(null);
     }
