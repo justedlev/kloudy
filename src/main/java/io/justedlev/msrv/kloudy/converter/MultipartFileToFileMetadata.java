@@ -2,6 +2,7 @@ package io.justedlev.msrv.kloudy.converter;
 
 import io.justedlev.msrv.kloudy.repository.entity.FileMetadata;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -22,7 +23,7 @@ public class MultipartFileToFileMetadata implements Converter<MultipartFile, Fil
         return FileMetadata.builder()
                 .filename(source.getOriginalFilename())
                 .extension(StringUtils.getFilenameExtension(source.getOriginalFilename()))
-                .type(source.getContentType())
+                .contentType(MediaType.valueOf(source.getContentType()))
                 .length(source.getSize())
                 .build();
     }
