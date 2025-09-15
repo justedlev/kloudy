@@ -1,12 +1,13 @@
 package io.justedlev.msrv.kloudy.service.impl;
 
-import io.justedlev.msrv.kloudy.configuration.properties.KloudyProperties;
-import io.justedlev.msrv.kloudy.converter.KloudyFileToResponse;
-import io.justedlev.msrv.kloudy.converter.MultipartFileToAttachment;
+import io.justedlev.msrv.kloudy.common.mapper.DownloadResponseMapper;
+import io.justedlev.msrv.kloudy.common.mapper.KloudyFileResponseMapper;
+import io.justedlev.msrv.kloudy.converter.MultipartFileToFileMetadata;
 import io.justedlev.msrv.kloudy.model.DownloadResponse;
 import io.justedlev.msrv.kloudy.model.KloudyFileFilterParams;
 import io.justedlev.msrv.kloudy.model.KloudyFileResponse;
 import io.justedlev.msrv.kloudy.repository.FileMetadataRepository;
+import io.justedlev.msrv.kloudy.repository.KloudyContentRepository;
 import io.justedlev.msrv.kloudy.repository.entity.FileMetadata;
 import io.justedlev.msrv.kloudy.repository.specs.FileMetadataSpecifications;
 import io.justedlev.msrv.kloudy.service.KloudyFileService;
@@ -17,16 +18,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -36,28 +33,27 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class KloudyFileServiceImpl implements KloudyFileService {
     private final FileMetadataRepository fileMetadataRepository;
-    private final KloudyProperties properties;
-    private final MultipartFileToAttachment multipartFileToAttachment;
-    private final KloudyFileToResponse kloudyFileToResponse;
+    private final KloudyContentRepository contentRepository;
+    private final MultipartFileToFileMetadata multipartFileToFileMetadata;
+    private final KloudyFileResponseMapper mapper;
+    private final DownloadResponseMapper downloadResponseMapper;
 
     @SneakyThrows
     @Transactional
     @Override
     public KloudyFileResponse upload(@NonNull MultipartFile file) {
         var entity = Optional.of(file)
-                .map(multipartFileToAttachment::convert)
+                .map(multipartFileToFileMetadata::convert)
                 .map(fileMetadataRepository::save)
                 .orElseThrow();
-        var copyLocation = properties.getRoot().resolve(entity.id().toString());
-        Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.ATOMIC_MOVE);
-
-        return kloudyFileToResponse.convert(entity);
+        contentRepository.set(entity.getId(), file.getInputStream());
+        return mapper.map(entity);
     }
 
     @Override
     public KloudyFileResponse getOne(UUID id) {
         return fileMetadataRepository.findById(id)
-                .map(kloudyFileToResponse::convert)
+                .map(mapper::map)
                 .orElseThrow(notFound(id));
     }
 
@@ -65,9 +61,8 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     public PagedModel<KloudyFileResponse> findAll(KloudyFileFilterParams params, Pageable pageable) {
         var spec = FileMetadataSpecifications.freeSearch(params.getQ());
         var page = fileMetadataRepository.findAll(spec, pageable);
-        var res = page.map(kloudyFileToResponse::convert);
 
-        return new PagedModel<>(res);
+        return mapper.map(page);
     }
 
     @Transactional
@@ -76,11 +71,8 @@ public class KloudyFileServiceImpl implements KloudyFileService {
         Try.of(CheckedFunction0.constant(id))
                 .map(fileMetadataRepository::findById)
                 .mapTry(opt -> opt.orElseThrow(notFound(id)))
-                .map(FileMetadata::id)
-                .map(UUID::toString)
-                .map(properties.getRoot()::resolve)
-                .filter(Files::exists)
-                .andThenTry(Files::delete)
+                .map(FileMetadata::getId)
+                .filter(contentRepository::delete)
                 .andFinallyTry(() -> fileMetadataRepository.deleteById(id))
                 .onFailure(ex -> log.error("Failed delete file", ex));
     }
@@ -89,18 +81,13 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     public DownloadResponse download(UUID id) {
         var entity = fileMetadataRepository.findById(id)
                 .orElseThrow(notFound(id));
-        var path = properties.getRoot().resolve(entity.id().toString());
+        var res = downloadResponseMapper.map(entity);
+        res.setResource(contentRepository.get(entity.getId()));
 
-        return DownloadResponse.builder()
-                .filename(entity.getFilename())
-                .extension(entity.getExtension())
-                .resource(new FileSystemResource(path))
-                .length(entity.getLength())
-                .contentType(MediaType.parseMediaType(entity.getType()))
-                .build();
+        return res;
     }
 
     private Supplier<RuntimeException> notFound(UUID id) {
-        return () -> new EntityNotFoundException("Kloudy file not found: " + id);
+        return () -> new EntityNotFoundException(String.format("File '%s' not found", id));
     }
 }
