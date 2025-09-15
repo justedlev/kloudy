@@ -48,7 +48,7 @@ public record KloudyFileResponse(
         @Schema(description = "Attributes")
         Map<String, String> attributes
 ) implements FluentAttributable<String> {
-    public Optional<String> attribute(String checksum) {
-        return Optional.ofNullable(checksum).map(attributes::get);
+    public Optional<String> attribute(String name) {
+        return Optional.ofNullable(name).map(attributes::get);
     }
 }
