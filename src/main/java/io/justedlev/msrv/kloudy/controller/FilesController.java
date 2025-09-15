@@ -2,8 +2,9 @@ package io.justedlev.msrv.kloudy.controller;
 
 import io.justedlev.msrv.kloudy.model.KloudyFileFilterParams;
 import io.justedlev.msrv.kloudy.model.KloudyFileResponse;
+import io.justedlev.msrv.kloudy.repository.entity.DefaultAuditable_;
+import io.justedlev.msrv.kloudy.repository.entity.FileMetadataAttributeNames;
 import io.justedlev.msrv.kloudy.service.KloudyFileService;
-import io.justedlev.sb3c.DefaultAuditable_;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,13 +22,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedModel;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.*;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -55,12 +58,16 @@ public class FilesController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<KloudyFileResponse> upload(@RequestPart(name = "f") @NotNull MultipartFile file) {
         var res = kloudyFileService.upload(file);
-        var location = UriComponentsBuilder.fromPath(CONTEXT_PATH)
-                .path(AntPathMatcher.DEFAULT_PATH_SEPARATOR + res.id())
+        var location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path(String.valueOf(res.id()))
                 .build()
                 .toUri();
 
-        return ResponseEntity.created(location).body(res);
+        return ResponseEntity.created(location)
+                .eTag(res.attribute(FileMetadataAttributeNames.SHA_256).orElse(null))
+                .lastModified(Instant.from(res.modifiedAt().atZone(ZoneId.systemDefault())))
+                .cacheControl(CacheControl.noCache().mustRevalidate())
+                .body(res);
     }
 
     @Operation(
@@ -133,8 +140,11 @@ public class FilesController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                 .contentLength(res.getLength())
                 .contentType(res.getContentType())
+                .lastModified(res.getModifiedAt())
+                .cacheControl(CacheControl.maxAge(Duration.ofHours(1)).mustRevalidate())
                 .body(out -> out.write(res.getResource().getContentAsByteArray()));
     }
 
