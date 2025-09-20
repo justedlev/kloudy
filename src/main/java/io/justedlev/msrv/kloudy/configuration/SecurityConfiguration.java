@@ -4,6 +4,7 @@ import io.justedlev.msrv.kloudy.configuration.properties.KloudySecurityConfigura
 import io.justedlev.msrv.kloudy.controller.FilesController;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.oauth2.client.ConditionalOnOAuth2ClientRegistrationProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
@@ -36,6 +37,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.Collection;
 
 @Configuration
+@ConditionalOnOAuth2ClientRegistrationProperties
 @EnableConfigurationProperties(KloudySecurityConfigurationProperties.class)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
