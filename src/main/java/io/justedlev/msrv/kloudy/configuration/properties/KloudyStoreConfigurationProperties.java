@@ -18,7 +18,7 @@ public class KloudyStoreConfigurationProperties {
      * Default: ${user.home}/.kloudy.bucket.d
      */
     @Value("${user.home}/.kloudy.bucket.d") // NOSONAR
-    private Path location;
+    private Path bucket;
     /**
      * The posix permissions
      *

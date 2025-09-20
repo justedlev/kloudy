@@ -30,18 +30,18 @@ public class KloudyConfiguration {
     public CommandLineRunner kloudyStoreInitializer(KloudyStoreConfigurationProperties props) {
         return args -> {
 
-            if (Files.exists(props.getLocation())) {
-                log.info("Kloudy root directory found: {}", props.getLocation().toAbsolutePath());
+            if (Files.exists(props.getBucket())) {
+                log.info("Kloudy root directory found: {}", props.getBucket().toAbsolutePath());
                 return;
             }
 
             if (SystemUtils.IS_OS_WINDOWS) {
-                var root = Files.createDirectory(props.getLocation());
+                var root = Files.createDirectory(props.getBucket());
                 log.info("Kloudy root directory created: {}", root);
             } else {
                 var perms = PosixFilePermissions.fromString(props.getPermissions());
                 var attrs = PosixFilePermissions.asFileAttribute(perms);
-                var root = Files.createDirectory(props.getLocation(), attrs);
+                var root = Files.createDirectory(props.getBucket(), attrs);
                 log.info("kloudy.root={} with perms={}", root, perms);
             }
 

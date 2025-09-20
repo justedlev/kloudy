@@ -26,7 +26,7 @@ public class SimpleContentRepository<I> implements ContentRepository<I> {
 
     @Autowired
     protected void setBucketFrom(KloudyStoreConfigurationProperties props) {
-        setBucket(props.getLocation());
+        setBucket(props.getBucket());
     }
 
     @SneakyThrows
