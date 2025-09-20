@@ -1,6 +1,7 @@
 package io.justedlev.msrv.kloudy.configuration.properties;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,11 +14,11 @@ import java.nio.file.Path;
 public class KloudyStoreConfigurationProperties {
     public static final String PREFIX = KloudyConfigurationProperties.PREFIX + ".store";
     /**
-     * The location for content
+     * The location in filesystem for content
      * <p>
      * Default: ${user.home}/.kloudy.bucket.d
      */
-    @Value("${user.home}/.kloudy.bucket.d") // NOSONAR
+    @Setter(onMethod_ = @Value("${user.home}/.kloudy.bucket.d"), onParam_ = @NonNull) // NOSONAR
     private Path bucket;
     /**
      * The posix permissions
