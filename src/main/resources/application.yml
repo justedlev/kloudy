@@ -2,7 +2,7 @@ server:
   port: 8901
   servlet:
     context-path: /api
-    application-display-name: ${spring.application.name}
+    application-display-name: "Kloudy - FS storage"
   error:
     include-stacktrace: never
     include-message: always
@@ -10,7 +10,12 @@ server:
   tomcat:
     max-swallow-size: 0
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
   web:
+    locale: en
     resources:
       chain:
         compressed: true
@@ -31,10 +36,11 @@ spring:
     name: kloudy
   cloud:
     config:
-      enabled: true
-  config:
-    import:
-      - 'optional:configserver:'
+      enabled: false
+    bus:
+      enabled: false
+  rabbitmq:
+    enabled: false
   devtools:
     restart:
       enabled: false
@@ -71,86 +77,20 @@ spring:
   security:
     oauth2:
       client:
-        provider:
-          keycloak:
-            token-uri: ${KC_TOKEN_URI}
-            issuer-uri: ${KC_ISSUER_URI}
-            authorization-uri: ${KC_AUTH_URI}
-            jwk-set-uri: ${KC_JWKS_URI}
-            user-info-uri: ${KC_USER_INFO_URI}
-            user-name-attribute: preferred_username
-            user-info-authentication-method: header
-        registration:
-          kloudy:
-            provider: keycloak
-            client-id: ${KC_CLIENT_ID}
-            client-secret: ${KC_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-            scope:
-              - discovery:rw
-      resourceserver:
-        jwt:
-          issuer-uri: ${KC_ISSUER_URI}
-          jwk-set-uri: ${KC_JWKS_URI}
-        opaquetoken:
-          introspection-uri: ${KC_INTROSPECTION_URI}
-          client-id: ${KC_CLIENT_ID}
-          client-secret: ${KC_CLIENT_SECRET}
-eureka:
-  instance:
-    instance-id: ${spring.application.name}
-    app-group-name: justedlev-msrv
-    appname: ${spring.application.name}
-    hostname: localhost
-    prefer-ip-address: true
-    metadata-map:
-      prometheus:
-        scrape: true
-        path: /actuator/prometheus
-  client:
-    restclient:
-      enabled: true
-    service-url:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
-logging:
-  level:
-    root: info
-    web: debug
-    sql: debug
+        enabled: false
 management:
   server:
-    port: 7901
-  info:
-    build:
-      enabled: true
-    os:
-      enabled: true
-    defaults:
-      enabled: true
-    java:
-      enabled: true
-  health:
-    readinessstate:
-      enabled: true
-    livenessstate:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+    port: -1
 springdoc:
   show-actuator: true
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
 kloudy:
-  enabled: true
   security:
     whitelist:
       GET:
         - /webjars/**
         - /v3/api-docs/**
-        - /*/v3/api-docs/**
-        - /*/*/v3/api-docs/**
         - /swagger-ui.html
         - /swagger-ui/**
         - /swagger-resources
@@ -158,7 +98,6 @@ kloudy:
         - /configuration/ui
         - /configuration/security
         - /actuator/**
-        - /*/actuator/**
         - /error
       POST:
         - /sso/logout
