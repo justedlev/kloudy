@@ -2,7 +2,6 @@ package io.justedlev.msrv.kloudy.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-import lombok.experimental.Accessors;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
@@ -11,7 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Builder
-@Accessors(chain = true)
 @Schema(description = "Kloudy file information model")
 public record KloudyFileResponse(
         @Schema(description = "Unique identifier of the file", accessMode = Schema.AccessMode.READ_ONLY)
