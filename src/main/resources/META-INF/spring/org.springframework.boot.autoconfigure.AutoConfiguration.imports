@@ -1,0 +1,3 @@
+io.justedlev.msrv.kloudy.autoconfiguration.KloudyOAuth2ClientAutoConfiguration
+io.justedlev.msrv.kloudy.autoconfiguration.KloudyOAuth2ResourceServerAutoConfiguration
+io.justedlev.msrv.kloudy.autoconfiguration.KloudyRabbitMQAutoConfiguration

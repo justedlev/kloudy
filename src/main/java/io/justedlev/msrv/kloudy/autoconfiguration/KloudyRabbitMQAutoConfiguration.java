@@ -1,22 +1,18 @@
-package io.justedlev.msrv.kloudy.configuration;
+package io.justedlev.msrv.kloudy.autoconfiguration;
 
+import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-@Slf4j
-@Configuration
+@AutoConfiguration
 @ConditionalOnBooleanProperty(prefix = "spring.rabbitmq", name = "enabled", matchIfMissing = true)
 @Import(RabbitAutoConfiguration.class)
-public class RabbitMQConfiguration {
-    @Setter(onMethod_ = @Value("${spring.rabbitmq.enabled}"))
+public class KloudyRabbitMQAutoConfiguration {
+    @Getter
+    @Setter(onMethod_ = @Value("${spring.rabbitmq.enabled:true}"))
     private boolean enabled;
-
-    public RabbitMQConfiguration() {
-        log.info("RabbitMQ configuration has been initialized: {}", enabled);
-    }
 }
