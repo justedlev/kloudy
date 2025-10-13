@@ -29,6 +29,8 @@ import java.util.Map;
 @ConfigurationProperties(KloudySecurityConfigurationProperties.PREFIX)
 public class KloudySecurityConfigurationProperties {
     public static final String PREFIX = KloudyConfigurationProperties.PREFIX + ".security";
+    public static final String ROLE_PREFIX = "ROLE_";
+    public static final String SCOPE_PREFIX = "SCOPE_";
     /**
      * A map that holds the HTTP method as the key and an array of allowed endpoint patterns as the value.
      * <p>
@@ -43,4 +45,6 @@ public class KloudySecurityConfigurationProperties {
      * @see HttpMethod
      */
     private Map<HttpMethod, String[]> whitelist = Map.of();
+    private String rolePrefix = ROLE_PREFIX;
+    private String scopePrefix = SCOPE_PREFIX;
 }
