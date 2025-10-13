@@ -47,11 +47,6 @@ spring:
   jackson:
     mapper:
       accept-case-insensitive-enums: true
-  data:
-    jdbc:
-      dialect: postgresql
-  datasource:
-    driver-class-name: org.postgresql.Driver
   jpa:
     properties:
       org:
@@ -62,10 +57,6 @@ spring:
             revision_field_name: rev_id
             revision_type_field_name: rev_type
             store_data_at_delete: true
-      #            audit_table_prefix:
-      hibernate:
-        enable_lazy_load_no_trans: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     show-sql: false
     hibernate:
@@ -82,23 +73,5 @@ management:
   server:
     port: -1
 springdoc:
-  show-actuator: true
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
-kloudy:
-  security:
-    whitelist:
-      GET:
-        - /webjars/**
-        - /v3/api-docs/**
-        - /swagger-ui.html
-        - /swagger-ui/**
-        - /swagger-resources
-        - /swagger-resources/**
-        - /configuration/ui
-        - /configuration/security
-        - /actuator/**
-        - /error
-      POST:
-        - /sso/logout
-        - /logout
