@@ -14,6 +14,7 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
   web:
     locale: en
     resources:
@@ -38,6 +39,8 @@ spring:
     config:
       enabled: false
     bus:
+      enabled: false
+    discovery:
       enabled: false
   rabbitmq:
     enabled: false
@@ -66,8 +69,12 @@ spring:
     init:
       mode: always
   security:
+    user:
+      name: kloudy
     oauth2:
       client:
+        enabled: false
+      resourceserver:
         enabled: false
 management:
   server:
@@ -75,3 +82,6 @@ management:
 springdoc:
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
+eureka:
+  client:
+    enabled: false

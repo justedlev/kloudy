@@ -1,0 +1,14 @@
+spring:
+  data:
+    jdbc:
+      dialect: postgresql
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/${spring.application.name}
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
