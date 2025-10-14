@@ -12,3 +12,19 @@ spring:
       hibernate:
         enable_lazy_load_no_trans: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+      org:
+        hibernate:
+          envers:
+            audit_strategy: org.hibernate.envers.strategy.ValidityAuditStrategy
+            audit_table_suffix: _history
+            revision_field_name: rev_id
+            revision_type_field_name: rev_type
+            store_data_at_delete: true
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
