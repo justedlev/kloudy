@@ -3,10 +3,19 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+  security:
+    oauth2:
+      client:
+        enabled: false
+      resourceserver:
+        enabled: false
   cloud:
     config:
       enabled: false
     bus:
+      enabled: false
+    discovery:
       enabled: false
   rabbitmq:
     enabled: false
@@ -17,12 +26,18 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:h2:mem:public;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=PostgreSQL;
+    url: jdbc:h2:mem:public;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
     driver-class-name: org.h2.Driver
     username: sa
 management:
   server:
     port: -1
+eureka:
+  client:
+    enabled: false
+kloudy:
+  store:
+    bucket: ${java.io.tmpdir}
 logging:
   level:
     sql: debug
