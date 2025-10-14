@@ -1,21 +1,21 @@
 name: justedlev-msrv
 services:
-  storage.justedlev.io:
+  fss.justedlev.io:
     tty: true
-    env_file:
-      - .env
-    container_name: bridgewayhub
-    image: justedlev/bridgewayhub:latest
+    container_name: kloudy
+    image: justedlev/kloudy:latest
     build:
       context: ../
       dockerfile: docker/Dockerfile
     ports:
       - "8901:5000"
-      - "8902:5005"
-    volumes:
-      - ../logs:${LOGGING_FILE_PATH}
+      - "7901:7000"
     deploy:
       resources:
         limits:
           cpus: "0.75"
           memory: 512MB
+    volumes:
+      - kloudy_bucket:/home/appuser/kloudy.bucket.d
+volumes:
+  kloudy_bucket:

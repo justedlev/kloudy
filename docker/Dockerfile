@@ -41,10 +41,11 @@ RUN java -Djarmode=tools -jar target/app.jar extract --layers --launcher --desti
 FROM eclipse-temurin:17-jre-jammy AS final
 
 LABEL maintainer="Justedlev"
-LABEL name="bridgewayhub"
-LABEL description="API Gateway"
+LABEL name="Kloudy"
+LABEL description="FS storage"
 
 ENV SERVER_PORT=5000
+ENV MANAGEMENT_SERVER_PORT=7000
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
@@ -70,6 +71,7 @@ COPY --chmod=0755 /docker/entrypoint.sh /entrypoint
 COPY --chmod=0755 /docker/healthcheck.sh /healthcheck
 
 EXPOSE ${SERVER_PORT}
+EXPOSE ${MANAGEMENT_SERVER_PORT}
 
 # Define the entry point for the Spring Boot application
 ENTRYPOINT [ "sh", "/entrypoint" ]
