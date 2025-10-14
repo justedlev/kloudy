@@ -85,3 +85,6 @@ springdoc:
 eureka:
   client:
     enabled: false
+kloudy:
+  store:
+    bucket: ${user.home}/.kloudy.bucket.d
