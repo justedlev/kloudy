@@ -31,18 +31,18 @@ public class KloudyConfiguration {
         return args -> {
 
             if (Files.exists(props.getBucket())) {
-                log.info("Kloudy root directory found: {}", props.getBucket().toAbsolutePath());
+                log.info("Kloudy bucket detected: {}", props.getBucket().toAbsolutePath().toUri());
                 return;
             }
 
             if (SystemUtils.IS_OS_WINDOWS) {
                 var root = Files.createDirectory(props.getBucket());
-                log.info("Kloudy root directory created: {}", root);
+                log.info("Kloudy bucket created: {}", root.toUri());
             } else {
                 var perms = PosixFilePermissions.fromString(props.getPermissions());
                 var attrs = PosixFilePermissions.asFileAttribute(perms);
                 var root = Files.createDirectory(props.getBucket(), attrs);
-                log.info("kloudy.root={} with perms={}", root, perms);
+                log.info("Kloudy bucket: {} {}", props.getPermissions(), root.toUri());
             }
 
         };
