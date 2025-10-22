@@ -1,7 +1,6 @@
 server:
   port: 8901
   servlet:
-    context-path: /api
     application-display-name: "Kloudy - FS storage"
   error:
     include-stacktrace: never
