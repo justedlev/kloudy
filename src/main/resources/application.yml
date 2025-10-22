@@ -14,6 +14,15 @@ spring:
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+  profiles:
+    group:
+      standalone:
+        - oauth2
+        - discovery
+        - management
+        - postgres
+        - redis
+        - config-client
   web:
     locale: en
     resources:
