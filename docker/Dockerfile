@@ -50,7 +50,7 @@ ENV MANAGEMENT_SERVER_PORT=7000
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
 ARG UID=10001
-ARG USERNAME=appuser
+ARG USERNAME=kloudy
 RUN adduser \
     --disabled-password \
     --gecos "" \

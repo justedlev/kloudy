@@ -16,6 +16,6 @@ services:
           cpus: "0.75"
           memory: 512MB
     volumes:
-      - kloudy_bucket:/home/appuser/kloudy.bucket.d
+      - kloudy_bucket:/home/kloudy/kloudy.bucket.d
 volumes:
   kloudy_bucket:
