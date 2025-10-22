@@ -18,6 +18,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
@@ -31,6 +37,8 @@ import java.util.function.Supplier;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@CacheConfig(cacheManager = "cacheManager", cacheNames = "fileMetadata")
 public class KloudyFileServiceImpl implements KloudyFileService {
     private final FileMetadataRepository fileMetadataRepository;
     private final KloudyContentRepository contentRepository;
@@ -40,6 +48,7 @@ public class KloudyFileServiceImpl implements KloudyFileService {
 
     @SneakyThrows
     @Transactional
+    @CachePut(cacheNames = "fileMetadata", key = "#result.id()")
     @Override
     public KloudyFileResponse upload(@NonNull MultipartFile file) {
         var entity = Optional.of(file)
@@ -50,6 +59,7 @@ public class KloudyFileServiceImpl implements KloudyFileService {
         return mapper.map(entity);
     }
 
+    @Cacheable(cacheNames = "fileMetadata", key = "#a0")
     @Override
     public KloudyFileResponse getOne(UUID id) {
         return fileMetadataRepository.findById(id)
@@ -66,6 +76,7 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "fileMetadata", key = "#a0")
     @Override
     public void delete(UUID id) {
         Try.of(CheckedFunction0.constant(id))

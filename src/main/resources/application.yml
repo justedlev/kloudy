@@ -58,6 +58,9 @@ spring:
         enabled: false
       resourceserver:
         enabled: false
+  cache:
+    redis:
+      enabled: false
 management:
   server:
     port: -1

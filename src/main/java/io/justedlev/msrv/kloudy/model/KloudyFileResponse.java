@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import org.springframework.http.MediaType;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +47,10 @@ public record KloudyFileResponse(
         String extension,
         @Schema(description = "Attributes")
         Map<String, String> attributes
-) implements FluentAttributable<String> {
+) implements FluentAttributable<String>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 3707L;
+
     public Optional<String> attribute(String name) {
         return Optional.ofNullable(name).map(attributes::get);
     }
