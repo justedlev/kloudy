@@ -1,4 +1,4 @@
-package io.justedlev.msrv.kloudy.autoconfiguration;
+package io.justedlev.msrv.kloudy.autoconfigure;
 
 import lombok.Getter;
 import lombok.Setter;

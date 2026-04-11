@@ -1,3 +1,4 @@
-io.justedlev.msrv.kloudy.autoconfiguration.KloudyOAuth2ClientAutoConfiguration
-io.justedlev.msrv.kloudy.autoconfiguration.KloudyOAuth2ResourceServerAutoConfiguration
-io.justedlev.msrv.kloudy.autoconfiguration.KloudyRabbitMQAutoConfiguration
+io.justedlev.msrv.kloudy.autoconfigure.KloudyOAuth2ClientAutoConfiguration
+io.justedlev.msrv.kloudy.autoconfigure.KloudyOAuth2ResourceServerAutoConfiguration
+io.justedlev.msrv.kloudy.autoconfigure.KloudyRabbitMQAutoConfiguration
+io.justedlev.msrv.kloudy.autoconfigure.KloudyRedisCacheAutoConfiguration

@@ -56,6 +56,11 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ProblemDetail getBody(Exception ex, WebRequest request, HttpStatus status) {
+
+        if (ex.getMessage() != null) {
+            return ProblemDetail.forStatusAndDetail(status, ex.getMessage());
+        }
+
         return Optional.ofNullable(getMessageSource())
                 .map(ms -> ms.getMessage(
                         ex.getClass().getName(),

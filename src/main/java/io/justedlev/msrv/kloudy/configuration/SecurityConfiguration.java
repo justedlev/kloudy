@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer(configurer -> configurer.jwt(Customizer.withDefaults()))
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry -> {
+                    props.getWhitelist().forEach((k, v) -> registry.requestMatchers(k, v).permitAll());
                     registry.requestMatchers(HttpMethod.GET, contextPath + "/actuator/prometheus")
                             .hasAuthority(props.getScopePrefix() + "prometheus.metrics:ro");
                     var filesPath = contextPath + FilesController.CONTEXT_PATH + "/**";
@@ -63,7 +64,6 @@ public class SecurityConfiguration {
                                     props.getScopePrefix() + "kloudy.files:rw",
                                     props.getRolePrefix() + "admin"
                             );
-                    props.getWhitelist().forEach((k, v) -> registry.requestMatchers(k, v).permitAll());
                     registry.anyRequest().authenticated();
                 })
                 .build();

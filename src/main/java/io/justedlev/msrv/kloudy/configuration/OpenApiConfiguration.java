@@ -6,7 +6,8 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.security.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.apache.hc.client5.http.auth.StandardAuthScheme;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "OpenApi specification - Kloudy APIs",
                 description = "Kloudy APIs Documentation",
-                version = "${spring.application.version}",
+                version = "v1",
                 contact = @Contact(
                         name = "Justedlev",
                         email = "jvstedlev@gmail.com"
@@ -27,8 +28,12 @@ import org.springframework.context.annotation.Configuration;
         ),
         servers = {
                 @Server(
+                        description = "Api Gateway Localhost",
+                        url = "http://localhost:8765/${spring.application.name:}${server.servlet.context-path:}"
+                ),
+                @Server(
                         description = "Localhost ENV",
-                        url = "http://localhost:8765/${spring.application.name}${server.servlet.context-path}"
+                        url = "http://localhost:${server.port:0}${server.servlet.context-path:}"
                 ),
         },
         security = {

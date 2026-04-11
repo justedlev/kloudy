@@ -45,6 +45,7 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     private final MultipartFileToFileMetadata multipartFileToFileMetadata;
     private final KloudyFileResponseMapper mapper;
     private final DownloadResponseMapper downloadResponseMapper;
+    private final MessageSource messageSource;
 
     @SneakyThrows
     @Transactional
@@ -99,6 +100,10 @@ public class KloudyFileServiceImpl implements KloudyFileService {
     }
 
     private Supplier<RuntimeException> notFound(UUID id) {
-        return () -> new EntityNotFoundException(String.format("File '%s' not found", id));
+        return () -> new EntityNotFoundException(messageSource.getMessage(
+                EntityNotFoundException.class.getName(),
+                new Object[]{id},
+                LocaleContextHolder.getLocale()
+        ));
     }
 }
