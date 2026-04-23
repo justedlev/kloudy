@@ -47,7 +47,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <spring-cloud.version>2025.1.0</spring-cloud.version>
-        <springdoc.openapi.version>3.0.0</springdoc.openapi.version>
+        <springdoc.openapi.version>3.0.3</springdoc.openapi.version>
         <modelmapper.version>3.2.4</modelmapper.version>
         <apache.commons.lang3.version>3.20.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.5.0</apache.commons.collections4.version>
